@@ -18,7 +18,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(article, index) in articles.data" :key="article.id">
+                                <!-- <tr v-for="(article, index) in articles.data" :key="article.id">
                                     <td width="50" class="text-center">{{ index + 1 }}</td>
                                     <td>{{ article.title }}</td>
                                     <td width="200" class="text-center">
@@ -28,11 +28,11 @@
                                             <button class="btn btn-danger" @click = "deletePost(article.id)">Delete</button>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
-                    <pagination :data="articles" @pagination-change-page="getResults"></pagination>
+                    <!-- <pagination :data="articles" @pagination-change-page="getResults"></pagination> -->
                 </div>
             </div>
             </div>
@@ -41,52 +41,35 @@
 </template>
 
 <script>
-export default {
-    data() {
-        return {
-          articles: {}
-        }
-    },
-    created() {
-            this.getResults();
-    },
-    methods: {
-        getResults(page){
+// @ is an alias to /src
 
-            let uri = 'api/articles?page=' + page;
-            this.axios.get(uri).then(response => {
-                        return response.data;
-                    }).then(data => {
-                        this.articles = data;
-                    });
-        },
-        deletePost(id)
-        {
-            this.$swal.fire({
-                title: 'Apakah kamu yakin?',
-                text: "Jika kamu hapus, maka data tidak akan kembali lagi.",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Hapus Deh',
-                cancelButtonText: 'Nggak Jadi'
-                }).then((result) => {
-                if (result.value) {
-                    this.$swal.fire({
-                        title: 'Success!',
-                        text: 'Article deleted successfully',
-                        icon: 'success',
-                        timer: 1000
-                    });
-                    let uri = `api/article/delete/${id}`;
-                    this.axios.delete(uri).then(response => {
-                        this.articles.splice(this.articles.indexOf(id), 1);
-                    });
-                    console.log("Deleted article with id ..." +id);
-                }
-            })
-        }
-    }
-  }
+export default {
+  data: () => ({
+    categories: [],
+  }),
+methods:{
+  
+},
+  created() {
+    console.log("get data categories");
+    this.axios
+      .get("/catatans")
+      .then(response => {
+        let { data } = response.data;
+        console.log(data);
+        this.categories = data;
+       
+        
+      })
+      .catch(error => {
+        let { responses } = error;
+        console.log(responses);
+      });
+
+    
+  },
+
+  name: "Home",
+  components: {}
+};
 </script>
